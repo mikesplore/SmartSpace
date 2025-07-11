@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/common/Header';
 import HomePage from './pages/HomePage';
@@ -23,6 +22,7 @@ function App() {
             <Route path="/bookings" element={<BookingsPage />} />
             <Route path="/spaces" element={<SpacesPage />} />
             <Route path="/admin" element={<AdminPage />} />
+          
           </Routes>
         </main>
       </div>
