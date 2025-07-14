@@ -1,10 +1,10 @@
 import React from 'react';
+import './LoadingSpinner.css'; // make sure to create this file or use styled-components
 
 const LoadingSpinner: React.FC = () => {
   return (
-    <div>
-      <p>This is the Loading Spinner component - replace this with your loading animation</p>
-      <p>Add a spinner or loading animation here</p>
+    <div className="spinner-overlay">
+      <div className="spinner" />
     </div>
   );
 };
