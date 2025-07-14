@@ -5,31 +5,72 @@
 @layer base {
   html {
     font-family: system-ui, sans-serif;
+    @apply antialiased;
   }
   
   body {
     @apply bg-gray-50 text-gray-900;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1 {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold;
+  }
+
+  h2 {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+  }
+
+  h3 {
+    @apply text-xl sm:text-2xl lg:text-3xl font-bold;
+  }
+
+  h4 {
+    @apply text-lg sm:text-xl font-semibold;
   }
 }
 
 @layer components {
+  .container {
+    @apply px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl;
+  }
+
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 focus:ring-offset-2 text-white font-medium py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2;
+    @apply bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-2 
+           text-white font-medium py-2 px-4 rounded-lg transition duration-200 
+           focus:outline-none focus:ring-2 text-sm sm:text-base;
   }
   
   .btn-secondary {
-    @apply bg-secondary-100 hover:bg-secondary-200 focus:ring-secondary-500 focus:ring-offset-2 text-secondary-700 font-medium py-2 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 border border-secondary-300;
+    @apply bg-gray-100 hover:bg-gray-200 focus:ring-gray-500 focus:ring-offset-2 
+           text-gray-700 font-medium py-2 px-4 rounded-lg transition duration-200 
+           focus:outline-none focus:ring-2 border border-gray-300 text-sm sm:text-base;
   }
   
   .card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 
+           p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow duration-200;
   }
   
   .form-input {
-    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm;
+    @apply block w-full rounded-lg border-gray-300 shadow-sm 
+           focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base
+           px-3 py-2 sm:px-4 sm:py-2;
   }
   
   .form-label {
-    @apply block text-sm font-medium text-gray-700 mb-1;
+    @apply block text-sm sm:text-base font-medium text-gray-700 mb-1;
+  }
+
+  .section {
+    @apply py-8 sm:py-12 lg:py-16;
+  }
+
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  .flex-responsive {
+    @apply flex flex-col sm:flex-row items-center gap-4 sm:gap-6;
   }
 }
