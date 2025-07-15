@@ -23,6 +23,7 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
@@ -45,7 +46,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc ^&^& vite build",
+    "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "jest",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -54,7 +55,7 @@
   },
   "browserslist": {
     "production": [
-      "^>0.2^",
+      ">0.2%",
       "not dead",
       "not op_mini all"
     ],

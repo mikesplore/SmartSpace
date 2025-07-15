@@ -1,11 +1,18 @@
 import React from 'react';
+import LoginForm from '../components/auth/LoginForm';
+import { Link } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
   return (
-    <div>
-      <h1>This is the Login Page - replace this with your login page implementation</h1>
-      <p>Login form, forgot password link, and registration link will go here</p>
-      <p>Add authentication logic and form validation</p>
+    <div className="container mx-auto">
+      <div className="max-w-md mx-auto">
+        <LoginForm />
+        <div className="text-center mt-4">
+          <p className="text-gray-600">
+            Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Sign up here</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
