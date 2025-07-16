@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the implementation plan for the Bookings UI components of the SmartSpace event space management system. The work is divided among 15 team members, each responsible for specific components and functionality related to bookings.
+This document outlines the implementation plan for the Bookings UI components of the SmartSpace event space management system. 
 
 ## Team Structure and Responsibilities
 
