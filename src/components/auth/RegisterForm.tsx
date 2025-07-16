@@ -14,7 +14,7 @@ type FormData = {
 
 export default function RegisterForm() {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  useAuth();
   
   const [formData, setFormData] = useState<FormData>({
     first_name: '',
@@ -46,15 +46,9 @@ export default function RegisterForm() {
     try {
       const result = await register(formData as RegisterData);
       
-      if (result && result.error) {
-        setError(result.error || 'Registration failed');
-      } else if (result && result.token) {
-        // Save token to localStorage
-        localStorage.setItem('token', result.token);
-        // Update user context
-        setUser(result.user);
-        // Redirect to dashboard
-        navigate('/dashboard');
+      if (result && result.id) {
+        // Registration successful - now log in the user
+        navigate('/login', { state: { message: 'Registration successful! Please log in.' } });
       } else {
         setError('Registration failed. Please try again.');
       }
