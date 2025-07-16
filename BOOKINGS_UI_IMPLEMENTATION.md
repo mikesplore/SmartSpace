@@ -103,7 +103,7 @@ const UserBookingsDashboard = ({ userId }) => {
 };
 ```
 
-### 10. **Booking Notifications** - Kalama
+### 10. **Booking Notifications** - Kalama && Mtama
 _File: `src/components/bookings/BookingNotifications.tsx`_
 - Implement notification system for booking updates
 - Show in-app and email notifications
