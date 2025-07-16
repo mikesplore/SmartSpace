@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { login } from '../../services/auth';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth.ts';
 
 type FormData = {
   email: string;
@@ -7,6 +10,9 @@ type FormData = {
 };
 
 const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+  
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
@@ -14,6 +20,7 @@ const LoginForm: React.FC = () => {
   });
 
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -23,7 +30,7 @@ const LoginForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -33,34 +40,69 @@ const LoginForm: React.FC = () => {
       return;
     }
 
-    // Submit logic here (e.g., authenticate with backend)
-    console.log('Login submitted:', formData);
+    setLoading(true);
+    try {
+      const result = await login(formData.email, formData.password);
+      
+      if (result && result.error) {
+        setError(result.error || 'Login failed');
+      } else if (result && result.token) {
+        // Save token to localStorage
+        localStorage.setItem('token', result.token);
+        // Update user context
+        setUser(result.user);
+        // Redirect to dashboard
+        navigate('/dashboard');
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-white p-8 rounded-2xl shadow-lg w-full">
-      <h2 className="text-2xl font-bold text-center mb-6">Welcome Back</h2>
-      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+    <div className="w-full">
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+          {error}
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            Email Address
+          </label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="••••••••"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
         <div className="flex items-center justify-between">
           <label className="flex items-center">
@@ -69,18 +111,21 @@ const LoginForm: React.FC = () => {
               name="rememberMe"
               checked={formData.rememberMe}
               onChange={handleChange}
-              className="mr-2"
+              className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span className="text-sm text-gray-600">Remember me</span>
           </label>
-          <a href="#" className="text-sm text-blue-600 hover:underline">Forgot password?</a>
+          <a href="#" className="text-sm text-blue-600 hover:underline">
+            Forgot password?
+          </a>
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium"
+          disabled={loading}
         >
-          Log In
+          {loading ? 'Signing In...' : 'Sign In'}
         </button>
       </form>
     </div>

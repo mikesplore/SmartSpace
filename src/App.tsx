@@ -1,9 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import Header from './components/common/Header';
-import Sidebar from './components/common/Sidebar';
-import Footer from './components/common/Footer';
 import { SidebarProvider } from './contexts/SidebarContext';
+import { AuthProvider } from './contexts/AuthContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -12,32 +10,57 @@ import BookingsPage from './pages/BookingsPage';
 import SpacesPage from './pages/SpacesPage';
 import SpaceFormPage from './pages/SpaceFormPage';
 import AdminPage from './pages/AdminPage';
+import MainLayout from './layouts/MainLayout';
+import AuthLayout from './layouts/AuthLayout';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
     <Router>
       <HelmetProvider>
-        <SidebarProvider>
-          <div className="flex flex-col min-h-screen bg-gray-50">
-            <Header />
-            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-grow">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
+        <AuthProvider>
+          <SidebarProvider>
+            <Routes>
+              {/* Auth Routes - No header, footer, or sidebar */}
+              <Route element={<AuthLayout />}>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/bookings" element={<BookingsPage />} />
+              </Route>
+              
+              {/* Main Routes - With header, footer, and sidebar */}
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/bookings" element={
+                  <ProtectedRoute>
+                    <BookingsPage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/spaces" element={<SpacesPage />} />
-                <Route path="/spaces/new" element={<SpaceFormPage />} />
-                <Route path="/spaces/edit/:spaceId" element={<SpaceFormPage />} />
+                <Route path="/spaces/new" element={
+                  <ProtectedRoute>
+                    <SpaceFormPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/spaces/edit/:spaceId" element={
+                  <ProtectedRoute>
+                    <SpaceFormPage />
+                  </ProtectedRoute>
+                } />
                 <Route path="/spaces/:spaceId" element={<SpacesPage />} />
-                <Route path="/admin" element={<AdminPage />} />
-              </Routes>
-            </main>
-            <Footer />
-            <Sidebar />
-          </div>
-        </SidebarProvider>
+                <Route path="/admin" element={
+                  <ProtectedRoute adminOnly>
+                    <AdminPage />
+                  </ProtectedRoute>
+                } />
+              </Route>
+            </Routes>
+          </SidebarProvider>
+        </AuthProvider>
       </HelmetProvider>
     </Router>
   );

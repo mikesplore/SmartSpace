@@ -1,38 +1,68 @@
 import React, { useState } from 'react';
+import { register } from '../../services/auth';
+import type { RegisterData } from '../../services/auth';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth.ts';
 
 type FormData = {
-  username: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  password_confirm: string;
 };
 
 export default function RegisterForm() {
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+  
   const [formData, setFormData] = useState<FormData>({
-    username: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    password_confirm: '',
   });
 
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.password !== formData.password_confirm) {
       setError('Passwords do not match');
       return;
     }
 
-    // Submit logic here (e.g., send to backend)
-    console.log('Form submitted:', formData);
+    setLoading(true);
+    
+    try {
+      const result = await register(formData as RegisterData);
+      
+      if (result && result.error) {
+        setError(result.error || 'Registration failed');
+      } else if (result && result.token) {
+        // Save token to localStorage
+        localStorage.setItem('token', result.token);
+        // Update user context
+        setUser(result.user);
+        // Redirect to dashboard
+        navigate('/dashboard');
+      } else {
+        setError('Registration failed. Please try again.');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -40,15 +70,27 @@ export default function RegisterForm() {
       <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <input
+            type="text"
+            name="first_name"
+            placeholder="First Name"
+            value={formData.first_name}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <input
+            type="text"
+            name="last_name"
+            placeholder="Last Name"
+            value={formData.last_name}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
         <input
           type="email"
@@ -72,9 +114,9 @@ export default function RegisterForm() {
 
         <input
           type="password"
-          name="confirmPassword"
+          name="password_confirm"
           placeholder="Confirm Password"
-          value={formData.confirmPassword}
+          value={formData.password_confirm}
           onChange={handleChange}
           required
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -83,8 +125,9 @@ export default function RegisterForm() {
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+          disabled={loading}
         >
-          Register
+          {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
     </div>
