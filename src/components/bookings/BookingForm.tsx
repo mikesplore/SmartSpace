@@ -64,91 +64,101 @@ const BookingForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      <h2>Create a New Booking</h2>
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md space-y-6"
+    >
+      <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Create a New Booking</h2>
 
-      <div>
-        <label>
-          Event Name:
-          <input
-            type="text"
-            name="eventName"
-            value={form.eventName}
-            onChange={handleChange}
-          />
-        </label>
-        {errors.eventName && <span style={{ color: 'red' }}>{errors.eventName}</span>}
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Event Name:</label>
+        <input
+          type="text"
+          name="eventName"
+          value={form.eventName}
+          onChange={handleChange}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.eventName ? 'border-red-500' : 'border-gray-300'}`}
+          placeholder="Enter event name"
+        />
+        {errors.eventName && <span className="text-red-500 text-sm">{errors.eventName}</span>}
       </div>
 
-      <div>
-        <label>
-          Space:
-          <select name="space" value={form.space} onChange={handleChange}>
-            <option value="">Select a space</option>
-            <option value="Conference Room">Conference Room</option>
-            <option value="Auditorium">Auditorium</option>
-            <option value="Meeting Pod">Meeting Pod</option>
-          </select>
-        </label>
-        {errors.space && <span style={{ color: 'red' }}>{errors.space}</span>}
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Space:</label>
+        <select
+          name="space"
+          value={form.space}
+          onChange={handleChange}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.space ? 'border-red-500' : 'border-gray-300'}`}
+        >
+          <option value="">Select a space</option>
+          <option value="Conference Room">Conference Room</option>
+          <option value="Auditorium">Auditorium</option>
+          <option value="Meeting Pod">Meeting Pod</option>
+        </select>
+        {errors.space && <span className="text-red-500 text-sm">{errors.space}</span>}
       </div>
 
-      <div>
-        <label>
-          Date:
-          <input
-            type="date"
-            name="date"
-            value={form.date}
-            onChange={handleChange}
-          />
-        </label>
-        {errors.date && <span style={{ color: 'red' }}>{errors.date}</span>}
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Date:</label>
+        <input
+          type="date"
+          name="date"
+          value={form.date}
+          onChange={handleChange}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.date ? 'border-red-500' : 'border-gray-300'}`}
+        />
+        {errors.date && <span className="text-red-500 text-sm">{errors.date}</span>}
       </div>
 
-      <div>
-        <label>
-          Start Time:
-          <input
-            type="time"
-            name="startTime"
-            value={form.startTime}
-            onChange={handleChange}
-          />
-        </label>
-        {errors.startTime && <span style={{ color: 'red' }}>{errors.startTime}</span>}
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Start Time:</label>
+        <input
+          type="time"
+          name="startTime"
+          value={form.startTime}
+          onChange={handleChange}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.startTime ? 'border-red-500' : 'border-gray-300'}`}
+        />
+        {errors.startTime && <span className="text-red-500 text-sm">{errors.startTime}</span>}
       </div>
 
-      <div>
-        <label>
-          End Time:
-          <input
-            type="time"
-            name="endTime"
-            value={form.endTime}
-            onChange={handleChange}
-          />
-        </label>
-        {errors.endTime && <span style={{ color: 'red' }}>{errors.endTime}</span>}
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">End Time:</label>
+        <input
+          type="time"
+          name="endTime"
+          value={form.endTime}
+          onChange={handleChange}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.endTime ? 'border-red-500' : 'border-gray-300'}`}
+        />
+        {errors.endTime && <span className="text-red-500 text-sm">{errors.endTime}</span>}
       </div>
 
-      <div>
-        <label>
-          Number of Attendees:
-          <input
-            type="number"
-            name="attendees"
-            min={1}
-            value={form.attendees}
-            onChange={handleChange}
-          />
-        </label>
-        {errors.attendees && <span style={{ color: 'red' }}>{errors.attendees}</span>}
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Number of Attendees:</label>
+        <input
+          type="number"
+          name="attendees"
+          min={1}
+          value={form.attendees}
+          onChange={handleChange}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.attendees ? 'border-red-500' : 'border-gray-300'}`}
+        />
+        {errors.attendees && <span className="text-red-500 text-sm">{errors.attendees}</span>}
       </div>
 
-      <button type="submit">Book Now</button>
+      <button
+        type="submit"
+        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-semibold"
+      >
+        Book Now
+      </button>
 
-      {submitted && <p style={{ color: 'green' }}>Booking submitted successfully!</p>}
+      {submitted && (
+        <p className="text-green-600 text-center font-medium mt-4">Booking submitted successfully!</p>
+      )}
     </form>
   );
 };
