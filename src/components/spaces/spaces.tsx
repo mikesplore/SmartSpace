@@ -203,15 +203,20 @@ const SpacesComponent: React.FC = () => {
 
           {/* Sort dropdown */}
           <div className="w-full lg:w-auto">
-            <select
+            <div className="relative">
+              <label htmlFor="sort-order" className="sr-only">Sort spaces by</label>
+              <select
+              id="sort-order"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value as 'name' | 'capacity' | 'price')}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
+              aria-label="Sort spaces by"
+              >
               <option value="name">Sort by Name</option>
               <option value="capacity">Sort by Capacity (High to Low)</option>
               <option value="price">Sort by Price (Low to High)</option>
-            </select>
+              </select>
+            </div>
           </div>
 
           {/* Filter toggle button */}
