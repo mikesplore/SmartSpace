@@ -5,10 +5,12 @@ import { AuthProvider } from './contexts/AuthContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import EmailVerificationPage from './pages/EmailVerificationPage';
+import PasswordResetRequestPage from './pages/PasswordResetRequestPage';
+import PasswordResetConfirmPage from './pages/PasswordResetConfirmPage';
 import DashboardPage from './pages/DashboardPage';
 import BookingsPage from './pages/BookingsPage';
 import SpacesPage from './pages/SpacesPage';
-import SpaceFormPage from './pages/SpaceFormPage';
 import AdminPage from './pages/AdminPage';
 import MainLayout from './layouts/MainLayout';
 import AuthLayout from './layouts/AuthLayout';
@@ -25,6 +27,9 @@ function App() {
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/verify-email" element={<EmailVerificationPage />} />
+                <Route path="/password-reset" element={<PasswordResetRequestPage />} />
+                <Route path="/password-reset-confirm/:uidb64/:token" element={<PasswordResetConfirmPage />} />
               </Route>
               
               {/* Main Routes - With header, footer, and sidebar */}
@@ -41,16 +46,6 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/spaces" element={<SpacesPage />} />
-                <Route path="/spaces/new" element={
-                  <ProtectedRoute>
-                    <SpaceFormPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/spaces/edit/:spaceId" element={
-                  <ProtectedRoute>
-                    <SpaceFormPage />
-                  </ProtectedRoute>
-                } />
                 <Route path="/spaces/:spaceId" element={<SpacesPage />} />
                 <Route path="/admin" element={
                   <ProtectedRoute adminOnly>

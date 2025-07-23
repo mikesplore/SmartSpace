@@ -1,151 +1,123 @@
-import  { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useBookings } from '../../hooks/useBookings';
+import LoadingSpinner from '../common/LoadingSpinner';
+import ErrorMessage from '../common/ErrorMessage';
 import { format } from 'date-fns';
 
-type Booking = {
-  id: number;
-  user: string;
-  date: string;
-  status: 'pending' | 'confirmed' | 'cancelled';
-};
+type BookingStatus = 'all' | 'pending' | 'approved' | 'rejected';
 
-const statuses = ['all', 'pending', 'confirmed', 'cancelled'];
+const statuses: BookingStatus[] = ['all', 'pending', 'approved', 'rejected'];
 
-const BookingList = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [userFilter, setUserFilter] = useState('');
-  const [dateFilter, setDateFilter] = useState('');
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
-
-  const fetchBookings = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get('/api/bookings/', {
-        params: {
-          status: statusFilter !== 'all' ? statusFilter : undefined,
-          user: userFilter || undefined,
-          date: dateFilter || undefined,
-          page,
-        },
-      });
-
-      const fetched = response.data.results || response.data;
-
-      setBookings(prev => (page === 1 ? fetched : [...prev, ...fetched]));
-      setHasMore(response.data.next !== null);
-    } catch (err) {
-      console.error('Failed to fetch bookings:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+const BookingList: React.FC = () => {
+  const { bookings, loading, error, fetchBookings } = useBookings();
+  const [statusFilter, setStatusFilter] = useState<BookingStatus>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchBookings();
-  }, [statusFilter, userFilter, dateFilter, page]);
+  }, []);
 
-  const handleLoadMore = () => {
-    if (!loading && hasMore) setPage(prev => prev + 1);
+  const filteredBookings = bookings.filter(booking => {
+    const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
+    const matchesSearch = booking.eventName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         booking.organizerName.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return 'text-green-600 bg-green-100';
+      case 'pending':
+        return 'text-yellow-600 bg-yellow-100';
+      case 'rejected':
+        return 'text-red-600 bg-red-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
+    }
   };
 
-  const handleFilterChange = () => {
-    setPage(1); // Reset to first page on filter change
-    fetchBookings();
-  };
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <div className="p-4 space-y-4">
+      <h2 className="text-2xl font-bold text-gray-800">All Bookings</h2>
+      
       {/* Filters */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <select title="Choose a status"
-          className="p-2 border rounded"
-          value={statusFilter}
-          onChange={e => {
-            setStatusFilter(e.target.value);
-            setPage(1);
-          }}
-        >
-          {statuses.map(status => (
-            <option key={status} value={status}>
-              {status.toUpperCase()}
-            </option>
-          ))}
-        </select>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Filter by Status
+          </label>
+          <select
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={statusFilter}
+            onChange={e => setStatusFilter(e.target.value as BookingStatus)}
+          >
+            {statuses.map(status => (
+              <option key={status} value={status}>
+                {status === 'all' ? 'All Statuses' : status.charAt(0).toUpperCase() + status.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          type="text"
-          className="p-2 border rounded"
-          placeholder="Filter by user"
-          value={userFilter}
-          onChange={e => {
-            setUserFilter(e.target.value);
-            setPage(1);
-          }}
-        />
-
-        <input
-          type="date"
-          title="Filter by date"
-          placeholder="Filter by date"
-          className="p-2 border rounded"
-          value={dateFilter}
-          onChange={e => {
-            setDateFilter(e.target.value);
-            setPage(1);
-          }}
-        />
-
-        <button
-          onClick={handleFilterChange}
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Apply Filters
-        </button>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Search Bookings
+          </label>
+          <input
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Search by event name or organizer"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
 
       {/* Booking List */}
       <div className="grid gap-4">
-        {bookings.map(booking => (
-          <div
-            key={booking.id}
-            className="p-4 border rounded shadow-sm bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center"
-          >
-            <div>
-              <p className="text-lg font-semibold">User: {booking.user}</p>
-              <p className="text-sm text-gray-500">
-                Date: {format(new Date(booking.date), 'PPP')}
-              </p>
-            </div>
-            <span
-              className={`px-2 py-1 rounded text-sm font-medium mt-2 sm:mt-0 ${
-                booking.status === 'confirmed'
-                  ? 'bg-green-100 text-green-700'
-                  : booking.status === 'cancelled'
-                  ? 'bg-red-100 text-red-700'
-                  : 'bg-yellow-100 text-yellow-700'
-              }`}
-            >
-              {booking.status.toUpperCase()}
-            </span>
+        {filteredBookings.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            No bookings found matching your criteria.
           </div>
-        ))}
+        ) : (
+          filteredBookings.map(booking => (
+            <div
+              key={booking.id}
+              className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
+            >
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+                <h3 className="text-lg font-semibold text-gray-800">{booking.eventName}</h3>
+                <span className={`px-3 py-1 rounded-full text-sm font-medium mt-2 sm:mt-0 ${getStatusColor(booking.status)}`}>
+                  {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600">
+                <div>
+                  <p><span className="font-medium">Space ID:</span> {booking.spaceId}</p>
+                  <p><span className="font-medium">Date:</span> {format(new Date(booking.startDateTime), 'PPP')}</p>
+                  <p><span className="font-medium">Time:</span> {format(new Date(booking.startDateTime), 'p')} - {format(new Date(booking.endDateTime), 'p')}</p>
+                </div>
+                <div>
+                  <p><span className="font-medium">Organizer:</span> {booking.organizerName}</p>
+                  <p><span className="font-medium">Email:</span> {booking.organizerEmail}</p>
+                  <p><span className="font-medium">Attendees:</span> {booking.attendance}</p>
+                </div>
+              </div>
+              
+              {booking.resources && booking.resources.length > 0 && (
+                <p className="mt-2 text-sm text-gray-600">
+                  <span className="font-medium">Resources:</span> {booking.resources.join(', ')}
+                </p>
+              )}
+            </div>
+          ))
+        )}
       </div>
-
-      {/* Pagination */}
-      {hasMore && (
-        <div className="text-center mt-4">
-          <button
-            onClick={handleLoadMore}
-            disabled={loading}
-            className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 disabled:opacity-50"
-          >
-            {loading ? 'Loading...' : 'Load More'}
-          </button>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,81 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import SpaceCard from './SpaceCard';
+import { useSpaces } from '../../hooks/useSpaces';
+import type { Space } from '../../services/spaces';
 import conferenceHall from '../../assets/confrece hall.jpg';
 import eventHall from '../../assets/event hall.jpg';
 import lab from '../../assets/lab.jpg';
 
-// Mock data for spaces (in a real app, this would come from an API)
-const MOCK_SPACES = [
-  {
-    id: 1,
-    name: 'Conference Room A',
-    capacity: 50,
-    features: ['Projector', 'Videoconferencing', 'Whiteboards'],
-    image: conferenceHall,
-    availability: true
-  },
-  {
-    id: 2,
-    name: 'Meeting Room B',
-    capacity: 15,
-    features: ['TV Screen', 'Whiteboard', 'Coffee Service'],
-    image: conferenceHall,
-    availability: true
-  },
-  {
-    id: 3,
-    name: 'Event Hall',
-    capacity: 200,
-    features: ['Stage', 'Sound System', 'Catering Area'],
-    image: eventHall,
-    availability: false
-  },
-  {
-    id: 4,
-    name: 'Training Lab',
-    capacity: 30,
-    features: ['Computers', 'Interactive Board', 'Training Equipment'],
-    image: lab,
-    availability: true
-  },
-];
-
-type Space = {
-  id: number;
-  name: string;
-  capacity: number;
-  features: string[];
-  image?: string;
-  availability: boolean;
+// Fallback images for spaces that don't have images
+const getSpaceImage = (space: Space) => {
+  if (space.image1) return space.image1;
+  if (space.image2) return space.image2;
+  if (space.image3) return space.image3;
+  
+  // Fallback based on capacity
+  if (space.capacity > 100) return eventHall;
+  if (space.capacity > 30) return conferenceHall;
+  return lab;
 };
 
 const SpaceList: React.FC = () => {
-  const [spaces, setSpaces] = useState<Space[]>(MOCK_SPACES);
-  const [loading, setLoading] = useState(false);
+  const { spaces, loading, error, fetchSpaces } = useSpaces();
   
-  // Fetch spaces - simulating API call
-  useEffect(() => {
-    // In a real app, you would fetch data from API:
-    // const fetchSpaces = async () => {
-    //   setLoading(true);
-    //   try {
-    //     const response = await fetch('/api/spaces');
-    //     const data = await response.json();
-    //     setSpaces(data);
-    //   } catch (error) {
-    //     console.error('Error fetching spaces:', error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-    // fetchSpaces();
-    
-    // Simulate loading
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 800);
-  }, []);
+  // Transform API spaces to component format
+  const transformedSpaces = spaces.map(space => ({
+    id: space.id,
+    name: space.name,
+    capacity: space.capacity,
+    features: space.features ? space.features.split(',').map(f => f.trim()) : [],
+    image: getSpaceImage(space),
+    availability: space.status === 'free',
+    location: space.location,
+    price_per_hour: space.price_per_hour,
+    description: space.description
+  }));
 
   if (loading) {
     return (
@@ -85,9 +42,31 @@ const SpaceList: React.FC = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="text-center p-8">
+        <div className="text-red-600 mb-4">{error}</div>
+        <button 
+          onClick={fetchSpaces}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (transformedSpaces.length === 0) {
+    return (
+      <div className="text-center p-8 text-gray-500">
+        No spaces available at the moment.
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {spaces.map(space => (
+      {transformedSpaces.map((space: any) => (
         <SpaceCard key={space.id} space={space} />
       ))}
     </div>
