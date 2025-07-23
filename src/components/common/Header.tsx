@@ -1,9 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSidebar } from '../../contexts/SidebarContext';
+import { useAuth } from '../../hooks/useAuth';
 
 const Header: React.FC = () => {
   const { toggle } = useSidebar();
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <header className="bg-white shadow-md border-b sticky top-0 z-30">
@@ -30,22 +38,48 @@ const Header: React.FC = () => {
             <Link to="/spaces" className="text-gray-700 hover:text-blue-600 transition-colors">
               Spaces
             </Link>
-            <Link to="/bookings" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Bookings
-            </Link>
-            <Link to="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Dashboard
-            </Link>
+            {isAuthenticated && (
+              <>
+                <Link to="/bookings" className="text-gray-700 hover:text-blue-600 transition-colors">
+                  My Bookings
+                </Link>
+                <Link to="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
+                  Dashboard
+                </Link>
+              </>
+            )}
           </nav>
 
           {/* Right section with action buttons */}
           <div className="flex items-center space-x-4">
-            <Link
-              to="/login"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-            >
-              Login
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <span className="text-sm text-gray-600 hidden sm:inline">
+                  Welcome back{user?.firstName ? `, ${user.firstName}` : ''}!
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-gray-700 hover:text-blue-600 transition-colors text-sm font-medium"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

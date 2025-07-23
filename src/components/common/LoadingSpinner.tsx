@@ -1,5 +1,5 @@
 import React from 'react';
-import './LoadingSpinner.css'; // make sure to create this file or use styled-components
+import './loadingSpinner.css'; // make sure to create this file or use styled-components
 
 const LoadingSpinner: React.FC = () => {
   return (

@@ -1,39 +1,62 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSpaces } from '../../hooks/useSpaces';
+import { useBookings } from '../../hooks/useBookings';
 
 interface BookingFormData {
   eventName: string;
-  space: string;
+  spaceId: string;
   date: string;
   startTime: string;
   endTime: string;
   attendees: number;
+  organizerName: string;
+  organizerEmail: string;
+  eventType: 'internal' | 'external';
+  resources: string[];
 }
 
 const initialFormState: BookingFormData = {
   eventName: '',
-  space: '',
+  spaceId: '',
   date: '',
   startTime: '',
   endTime: '',
   attendees: 1,
+  organizerName: '',
+  organizerEmail: '',
+  eventType: 'internal',
+  resources: [],
 };
 
 const BookingForm: React.FC = () => {
+  const navigate = useNavigate();
+  const { spaces, loading: spacesLoading } = useSpaces();
+  const { createBooking, loading: bookingLoading } = useBookings();
+  
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [submitted, setSubmitted] = useState(false);
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     if (!form.eventName) newErrors.eventName = 'Event name is required';
-    if (!form.space) newErrors.space = 'Space selection is required';
+    if (!form.spaceId) newErrors.spaceId = 'Space selection is required';
     if (!form.date) newErrors.date = 'Date is required';
     if (!form.startTime) newErrors.startTime = 'Start time is required';
     if (!form.endTime) newErrors.endTime = 'End time is required';
+    if (!form.organizerName) newErrors.organizerName = 'Organizer name is required';
+    if (!form.organizerEmail) newErrors.organizerEmail = 'Organizer email is required';
     if (form.attendees < 1) newErrors.attendees = 'At least one attendee required';
     if (form.startTime && form.endTime && form.startTime >= form.endTime) {
       newErrors.endTime = 'End time must be after start time';
     }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (form.organizerEmail && !emailRegex.test(form.organizerEmail)) {
+      newErrors.organizerEmail = 'Please enter a valid email address';
+    }
+    
     return newErrors;
   };
 
@@ -47,19 +70,45 @@ const BookingForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleResourceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const resource = e.target.value;
+    setForm((prev) => ({
+      ...prev,
+      resources: e.target.checked
+        ? [...prev.resources, resource]
+        : prev.resources.filter((r) => r !== resource),
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     const validationErrors = validate();
     setErrors(validationErrors);
+    
     if (Object.keys(validationErrors).length === 0) {
-      setSubmitted(true);
-      // Submit booking logic here
-      // Reset form if needed
-      // setForm(initialFormState);
-      //setForm(initialFormState);
+      try {
+        const bookingData = {
+          eventName: form.eventName,
+          spaceId: form.spaceId,
+          startDateTime: `${form.date}T${form.startTime}`,
+          endDateTime: `${form.date}T${form.endTime}`,
+          organizerName: form.organizerName,
+          organizerEmail: form.organizerEmail,
+          eventType: form.eventType,
+          attendance: form.attendees,
+          resources: form.resources,
+        };
 
-    } else {
-      setSubmitted(false);
+        await createBooking(bookingData);
+        
+        // Success - reset form and redirect
+        setForm(initialFormState);
+        navigate('/bookings');
+      } catch (error) {
+        console.error('Error creating booking:', error);
+        setErrors({ submit: 'Failed to create booking. Please try again.' });
+      }
     }
   };
 
@@ -87,17 +136,21 @@ const BookingForm: React.FC = () => {
       <div className="flex flex-col gap-1">
         <label className="font-medium text-gray-700">Space:</label>
         <select
-          name="space"
-          value={form.space}
+          name="spaceId"
+          value={form.spaceId}
           onChange={handleChange}
-          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.space ? 'border-red-500' : 'border-gray-300'}`}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.spaceId ? 'border-red-500' : 'border-gray-300'}`}
+          disabled={spacesLoading}
         >
           <option value="">Select a space</option>
-          <option value="Conference Room">Conference Room</option>
-          <option value="Auditorium">Auditorium</option>
-          <option value="Meeting Pod">Meeting Pod</option>
+          {spaces.map((space: any) => (
+            <option key={space.id} value={space.id}>
+              {space.name} - {space.location}
+            </option>
+          ))}
         </select>
-        {errors.space && <span className="text-red-500 text-sm">{errors.space}</span>}
+        {spacesLoading && <span className="text-blue-500 text-sm">Loading spaces...</span>}
+        {errors.spaceId && <span className="text-red-500 text-sm">{errors.spaceId}</span>}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -149,16 +202,74 @@ const BookingForm: React.FC = () => {
         {errors.attendees && <span className="text-red-500 text-sm">{errors.attendees}</span>}
       </div>
 
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Organizer Name:</label>
+        <input
+          type="text"
+          name="organizerName"
+          value={form.organizerName}
+          onChange={handleChange}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.organizerName ? 'border-red-500' : 'border-gray-300'}`}
+          placeholder="Enter organizer name"
+        />
+        {errors.organizerName && <span className="text-red-500 text-sm">{errors.organizerName}</span>}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Organizer Email:</label>
+        <input
+          type="email"
+          name="organizerEmail"
+          value={form.organizerEmail}
+          onChange={handleChange}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.organizerEmail ? 'border-red-500' : 'border-gray-300'}`}
+          placeholder="Enter email address"
+        />
+        {errors.organizerEmail && <span className="text-red-500 text-sm">{errors.organizerEmail}</span>}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Event Type:</label>
+        <select
+          name="eventType"
+          value={form.eventType}
+          onChange={handleChange}
+          className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="internal">Internal Event</option>
+          <option value="external">External Event</option>
+        </select>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="font-medium text-gray-700">Required Resources:</label>
+        <div className="space-y-2">
+          {['Projector', 'Whiteboard', 'Video Conferencing', 'Catering', 'Sound System'].map((resource) => (
+            <label key={resource} className="flex items-center">
+              <input
+                type="checkbox"
+                value={resource}
+                checked={form.resources.includes(resource)}
+                onChange={handleResourceChange}
+                className="mr-2"
+              />
+              {resource}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {errors.submit && (
+        <div className="text-red-600 text-center font-medium">{errors.submit}</div>
+      )}
+
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-semibold"
+        disabled={bookingLoading}
+        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-semibold disabled:bg-gray-400"
       >
-        Book Now
+        {bookingLoading ? 'Creating Booking...' : 'Book Now'}
       </button>
-
-      {submitted && (
-        <p className="text-green-600 text-center font-medium mt-4">Booking submitted successfully!</p>
-      )}
     </form>
   );
 };
