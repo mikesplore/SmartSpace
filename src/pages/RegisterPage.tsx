@@ -6,15 +6,15 @@ const RegisterPage: React.FC = () => {
   return (
     <div className="w-full">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-blue-600">SmartSpace</h1>
-        <p className="text-gray-600 mt-2">Create your account</p>
+        <h1 className="text-2xl font-bold text-slate-800">Join SmartSpace</h1>
+        <p className="text-slate-600 mt-2">Create your account to get started</p>
       </div>
       
       <RegisterForm />
       
       <div className="text-center mt-8">
-        <p className="text-gray-600">
-          Already have an account? <Link to="/login" className="text-blue-600 hover:underline font-medium">Login here</Link>
+        <p className="text-slate-600">
+          Already have an account? <Link to="/login" className="text-blue-600 hover:text-blue-800 font-medium transition">Login here</Link>
         </p>
       </div>
     </div>
