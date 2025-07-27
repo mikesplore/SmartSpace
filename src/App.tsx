@@ -10,8 +10,8 @@ import PasswordResetRequestPage from './pages/PasswordResetRequestPage';
 import PasswordResetConfirmPage from './pages/PasswordResetConfirmPage';
 import DashboardPage from './pages/DashboardPage';
 import BookingsPage from './pages/BookingsPage';
+import BookingFormPage from './pages/BookingFormPage';
 import SpacesPage from './pages/SpacesPage';
-import AdminPage from './pages/AdminPage';
 import MainLayout from './layouts/MainLayout';
 import AuthLayout from './layouts/AuthLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -94,13 +94,13 @@ function App() {
                     <BookingsPage />
                   </ProtectedRoute>
                 } />
-                <Route path="/spaces" element={<SpacesPage />} />
-                <Route path="/spaces/:spaceId" element={<SpacesPage />} />
-                <Route path="/admin" element={
-                  <ProtectedRoute adminOnly>
-                    <AdminPage />
+                <Route path="/bookings/new" element={
+                  <ProtectedRoute>
+                    <BookingFormPage />
                   </ProtectedRoute>
                 } />
+                <Route path="/spaces" element={<SpacesPage />} />
+                <Route path="/spaces/:spaceId" element={<SpacesPage />} />
               </Route>
             </Routes>
           </SidebarProvider>

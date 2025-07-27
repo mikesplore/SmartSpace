@@ -9,18 +9,35 @@ type BookingStatus = 'all' | 'pending' | 'approved' | 'rejected';
 const statuses: BookingStatus[] = ['all', 'pending', 'approved', 'rejected'];
 
 const BookingList: React.FC = () => {
-  const { bookings, loading, error, fetchBookings } = useBookings();
+  const { myEvents, loading, error, fetchMyEvents } = useBookings();
   const [statusFilter, setStatusFilter] = useState<BookingStatus>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchBookings();
+    fetchMyEvents();
   }, []);
 
-  const filteredBookings = bookings.filter(booking => {
+  // Defensive: default to empty array if undefined
+  const bookings = Array.isArray(myEvents) ? myEvents : [];
+
+  // Map API fields to camelCase for UI
+  const mappedBookings = bookings.map(b => ({
+    id: b.id,
+    eventName: b.event_name,
+    organizerName: b.organizer_name,
+    organizerEmail: b.organizer_email || '',
+    attendance: b.attendance || '',
+    status: b.status,
+    spaceId: b.space || b.space_name || '',
+    startDateTime: b.start_datetime,
+    endDateTime: b.end_datetime,
+    resources: b.resources || [],
+  }));
+
+  const filteredBookings = mappedBookings.filter(booking => {
     const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
-    const matchesSearch = booking.eventName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         booking.organizerName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = booking.eventName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         booking.organizerName?.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;
   });
 
