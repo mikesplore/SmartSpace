@@ -149,18 +149,20 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="section bg-slate-900 text-white">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied users who trust SmartSpace for their space needs
-          </p>
-          <Link 
-            to={isAuthenticated ? "/spaces" : "/register"} 
-            className="inline-block bg-white text-slate-900 hover:bg-slate-100 transition-all duration-200 font-medium py-4 px-8 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-          >
-            {isAuthenticated ? "Browse Spaces" : "Get Started Now"}
-          </Link>
+      <section className="section bg-transparent">
+        <div className="container mx-auto flex justify-center">
+          <div className="w-full max-w-2xl bg-slate-900 text-white rounded-3xl shadow-2xl px-8 py-12 text-center border border-slate-800">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Ready to Get Started?</h2>
+            <p className="text-lg sm:text-xl text-slate-300 mb-8">
+              Join thousands of satisfied users who trust <span className="font-semibold text-white">SmartSpace</span> for their space needs
+            </p>
+            <Link 
+              to={isAuthenticated ? "/spaces" : "/register"} 
+              className="inline-block bg-white text-slate-900 hover:bg-slate-100 transition-all duration-200 font-medium py-3 px-8 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            >
+              {isAuthenticated ? "Browse Spaces" : "Get Started Now"}
+            </Link>
+          </div>
         </div>
       </section>
     </div>

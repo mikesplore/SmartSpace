@@ -108,56 +108,49 @@ const DashboardPage: React.FC = () => {
         )}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
-                <Calendar className="w-6 h-6 text-gray-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Bookings</p>
-                <p className="text-2xl font-bold text-gray-900">{totalBookings}</p>
-                <p className="text-xs text-gray-500 mt-1">{confirmedBookings} confirmed</p>
-              </div>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8">
+          {/* Card 1 */}
+          <div className="bg-white rounded-xl border border-gray-200 px-3 py-4 sm:p-6 flex items-center min-w-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Bookings</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-900">{totalBookings}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 mt-1">{confirmedBookings} confirmed</p>
             </div>
           </div>
-          
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                <Clock className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">Upcoming Events</p>
-                <p className="text-2xl font-bold text-blue-600">{userUpcomingBookings.length}</p>
-                <p className="text-xs text-gray-500 mt-1">Next 30 days</p>
-              </div>
+          {/* Card 2 */}
+          <div className="bg-white rounded-xl border border-gray-200 px-3 py-4 sm:p-6 flex items-center min-w-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+              <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Upcoming Events</p>
+              <p className="text-lg sm:text-2xl font-bold text-blue-600">{userUpcomingBookings.length}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Next 30 days</p>
             </div>
           </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">Hours Booked</p>
-                <p className="text-2xl font-bold text-purple-600">{Math.round(totalHoursBooked)}</p>
-                <p className="text-xs text-gray-500 mt-1">Total hours</p>
-              </div>
+          {/* Card 3 */}
+          <div className="bg-white rounded-xl border border-gray-200 px-3 py-4 sm:p-6 flex items-center min-w-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Hours Booked</p>
+              <p className="text-lg sm:text-2xl font-bold text-purple-600">{Math.round(totalHoursBooked)}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Total hours</p>
             </div>
           </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mr-4">
-                <span className="text-emerald-600 font-bold text-lg">$</span>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Spent</p>
-                <p className="text-2xl font-bold text-emerald-600">${calculateTotalSpent().toFixed(0)}</p>
-                <p className="text-xs text-gray-500 mt-1">All time</p>
-              </div>
+          {/* Card 4 */}
+          <div className="bg-white rounded-xl border border-gray-200 px-3 py-4 sm:p-6 flex items-center min-w-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+              <span className="text-emerald-600 font-bold text-base sm:text-lg">$</span>
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Spent</p>
+              <p className="text-lg sm:text-2xl font-bold text-emerald-600">${calculateTotalSpent().toFixed(0)}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 mt-1">All time</p>
             </div>
           </div>
         </div>
@@ -170,7 +163,7 @@ const DashboardPage: React.FC = () => {
                 <h2 className="text-lg font-semibold text-gray-900">Recent Bookings</h2>
                 <Link 
                   to="/bookings" 
-                  className="text-gray-600 hover:text-gray-900 text-sm font-medium flex items-center gap-1 transition-colors"
+                  className="text-gray-900 hover:text-gray-700 text-sm font-medium flex items-center gap-1 transition-colors border border-gray-300 rounded-md px-3 py-1 hover:bg-gray-50"
                 >
                   View All <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -178,24 +171,32 @@ const DashboardPage: React.FC = () => {
             </div>
             <div className="p-6">
               {myEvents && myEvents.length > 0 ? (
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {myEvents.slice(0, 3).map((event) => {
                     const dateTime = formatDateTime(event.start_datetime);
                     return (
-                      <div key={event.id} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                            <MapPin className="w-5 h-5 text-gray-600" />
+                      <div key={event.id} className="flex flex-col h-full justify-between p-3 sm:p-4 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors min-w-0">
+                        <div className="flex items-center gap-3 mb-2 min-w-0">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
                           </div>
-                          <div>
-                            <h3 className="font-medium text-gray-900">{event.event_name}</h3>
-                            <p className="text-sm text-gray-500">{event.space_name}</p>
-                            <p className="text-sm text-gray-500">{dateTime.date} • {dateTime.time}</p>
+                          <div className="min-w-0">
+                            <h3 className="font-medium text-gray-900 text-base sm:text-lg truncate">{event.event_name}</h3>
+                            <p className="text-xs sm:text-sm text-gray-500 truncate">{event.space_name}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 truncate">{dateTime.date} • {dateTime.time}</p>
                           </div>
                         </div>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(event.status)}`}>
-                          {event.status}
-                        </span>
+                        <div className="flex justify-between items-center mt-auto">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(event.status)}`}>
+                            {event.status}
+                          </span>
+                          <Link 
+                            to="/bookings"
+                            className="text-xs font-medium text-black hover:text-gray-700" 
+                          >
+                            Details
+                          </Link>
+                        </div>
                       </div>
                     );
                   })}
@@ -252,7 +253,7 @@ const DashboardPage: React.FC = () => {
                       const dateTime = formatDateTime(event.start_datetime);
                       return (
                         <div key={event.id} className="flex items-start gap-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="w-2 h-2 bg-gray-900 rounded-full mt-2 flex-shrink-0"></div>
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium text-gray-900 truncate">{event.event_name}</p>
                             <p className="text-xs text-gray-500">{event.space_name}</p>

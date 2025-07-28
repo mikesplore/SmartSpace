@@ -143,7 +143,7 @@ const SpacesComponent: React.FC = () => {
       {/* Show loading spinner if loading */}
       {loading ? (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white bg-opacity-80">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-black border-solid"></div>
           <span className="mt-4 text-gray-500">Loading spaces...</span>
         </div>
       ) : error ? (
@@ -161,7 +161,7 @@ const SpacesComponent: React.FC = () => {
           <p className="text-gray-500">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            className="mt-4 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
           >
             Try Again
           </button>
@@ -179,7 +179,7 @@ const SpacesComponent: React.FC = () => {
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                     placeholder="Search spaces..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pl-10"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 pl-10"
                   />
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
@@ -201,7 +201,7 @@ const SpacesComponent: React.FC = () => {
                   id="sort-order"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value as 'name' | 'capacity' | 'price')}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                   aria-label="Sort spaces by"
                   >
                   <option value="name">Sort by Name</option>
@@ -233,7 +233,7 @@ const SpacesComponent: React.FC = () => {
               <div className="w-full lg:w-auto">
                 <button
                   onClick={resetFilters}
-                  className="px-4 py-2 text-blue-600 hover:text-blue-800 hover:underline transition"
+                  className="px-4 py-2 text-gray-800 hover:text-black hover:underline transition"
                 >
                   Reset All Filters
                 </button>
@@ -287,7 +287,7 @@ const SpacesComponent: React.FC = () => {
                         ...prev,
                         onlyAvailable: !prev.onlyAvailable
                       }))}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-gray-800 focus:ring-gray-500 border-gray-300 rounded"
                     />
                     <label htmlFor="availability-filter" className="ml-2 block text-sm text-gray-700">
                       Show only available spaces
@@ -456,7 +456,7 @@ const SpacesComponent: React.FC = () => {
                       <div className="mt-4 flex gap-2">
                         <Link 
                           to={`/spaces/${space.id}`}
-                          className="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium"
+                          className="text-gray-800 hover:text-black hover:underline text-sm font-medium"
                         >
                           View Details
                         </Link>
@@ -464,7 +464,7 @@ const SpacesComponent: React.FC = () => {
                         <button 
                           className={`ml-auto px-4 py-2 rounded-md text-sm font-medium ${
                             space.status === 'free' 
-                              ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                              ? 'bg-black text-white hover:bg-gray-800' 
                               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                           } transition`}
                           disabled={space.status !== 'free'}
@@ -492,7 +492,7 @@ const SpacesComponent: React.FC = () => {
               <p className="text-gray-500">Try adjusting your search or filter criteria</p>
               <button
                 onClick={resetFilters}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                className="mt-4 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition"
               >
                 Clear All Filters
               </button>

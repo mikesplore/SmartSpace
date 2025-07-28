@@ -1,4 +1,5 @@
-import apiClient, { apiGet, apiPost, API_BASE_URL, directFetch } from './apiClient';
+import {apiPost, directFetch } from './apiClient';
+import { API_BASE_URL } from './baseUrl';
 import axios from 'axios';
 
 // Event/Booking interfaces based on API documentation
@@ -121,7 +122,7 @@ export const getMyEvents = async (): Promise<EventList[]> => {
     
     try {
         // Use full direct URL for debugging
-        const fullUrl = 'http://127.0.0.1:8000/api/bookings/my-events/';
+        const fullUrl = `${API_BASE_URL}/bookings/my-events/`;
         console.log(`Fetching from: ${fullUrl} with token: ${token.substring(0, 10)}...`);
         
         // Use Axios directly for more control with explicit timeout

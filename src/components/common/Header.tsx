@@ -41,6 +41,14 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
+            {isAuthenticated && (
+              <Link 
+                to="/dashboard" 
+                className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
+              >
+                Dashboard
+              </Link>
+            )}
             <Link 
               to="/spaces" 
               className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
@@ -48,20 +56,12 @@ const Header: React.FC = () => {
               Spaces
             </Link>
             {isAuthenticated && (
-              <>
-                <Link 
-                  to="/bookings" 
-                  className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
-                >
-                  My Bookings
-                </Link>
-                <Link 
-                  to="/dashboard" 
-                  className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
-                >
-                  Dashboard
-                </Link>
-              </>
+              <Link 
+                to="/bookings" 
+                className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
+              >
+                My Bookings
+              </Link>
             )}
           </nav>
 

@@ -48,8 +48,8 @@ const LoginForm: React.FC = () => {
     try {
       await login(formData.email, formData.password);
       
-      // Redirect to intended page or spaces
-      const from = location.state?.from?.pathname || '/spaces';
+      // Redirect to intended page or dashboard
+      const from = location.state?.from?.pathname || '/dashboard';
       navigate(from, { replace: true });
       
     } catch (err: any) {

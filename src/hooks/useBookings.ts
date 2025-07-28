@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_BASE_URL } from '../services/apiClient';
+import { API_BASE_URL } from '@/services/baseUrl';
 import type { Event, EventList, CreateEventData } from '../services/bookings';
 import { useAuth } from './useAuth';
 

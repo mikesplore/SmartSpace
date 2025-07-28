@@ -148,27 +148,25 @@ const SpaceDetails: React.FC = () => {
       <div className="flex flex-col lg:flex-row justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">{space.name}</h1>
-          <div className="flex items-center mt-2">
-            <div className="flex items-center text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="flex flex-row items-center justify-between mt-2 text-xs sm:text-sm md:text-base text-gray-600 w-full">
+            <div className="flex items-center flex-1 min-w-0">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              {space.location}
+              <span className="truncate">{space.location}</span>
             </div>
-            <span className="mx-2 text-gray-300">|</span>
-            <div className="flex items-center text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-center flex-1 min-w-0 justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
-              Capacity: {space.capacity}
+              <span className="truncate">Capacity: {space.capacity}</span>
             </div>
-            <span className="mx-2 text-gray-300">|</span>
-            <div className="flex items-center text-sm text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-center flex-1 min-w-0 justify-end">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Status: {space.status === 'free' ? 'Available' : 'Booked'}
+              <span className="truncate">Status: {space.status === 'free' ? 'Available' : 'Booked'}</span>
             </div>
           </div>
         </div>
@@ -402,30 +400,30 @@ const SpaceDetails: React.FC = () => {
                 <p className="text-gray-600 mb-4">{space.description || 'No description available.'}</p>
                 
                 <div className="bg-blue-50 rounded-lg p-4 border border-blue-100 mt-6">
-                  <h4 className="font-medium text-blue-800 mb-2">Space Specifications</h4>
-                  <div className="grid grid-cols-2 gap-y-2">
+                <h4 className="font-medium text-gray-900 mb-2">Space Specifications</h4>
+                <div className="grid grid-cols-2 gap-y-2 bg-gray-50 rounded-lg p-4 border border-gray-200 mt-6">
                     <div className="flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                       </svg>
                       <span className="text-gray-700">Capacity: {space.capacity} people</span>
                     </div>
                     {space.equipment && (
                       <div className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <span className="text-gray-700">Equipment: {space.equipment}</span>
                       </div>
                     )}
                     <div className="flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span className="text-gray-700">Status: {space.status === 'free' ? 'Available' : 'Booked'}</span>
                     </div>
                     <div className="flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       <span className="text-gray-700">Created: {new Date(space.created_at).toLocaleDateString()}</span>
@@ -460,7 +458,7 @@ const SpaceDetails: React.FC = () => {
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-semibold text-gray-800">Reviews</h3>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm font-medium">
+                  <button className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition text-sm font-medium">
                     Write a Review
                   </button>
                 </div>
@@ -472,7 +470,7 @@ const SpaceDetails: React.FC = () => {
                   </svg>
                   <h3 className="text-lg font-medium text-gray-900 mb-1">No reviews yet</h3>
                   <p className="text-gray-500 mb-4">Be the first to review this space</p>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm font-medium">
+                  <button className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition text-sm font-medium">
                     Write a Review
                   </button>
                 </div>
@@ -509,7 +507,7 @@ const SpaceDetails: React.FC = () => {
 
               <button
                 onClick={handleBookNow}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+                className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
               >
                 Book Now
               </button>
